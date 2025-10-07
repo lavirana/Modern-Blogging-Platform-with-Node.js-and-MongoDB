@@ -1,6 +1,9 @@
 const path = require("path");
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const { checkForAuthenticationCookie } = require('./middlewares/authentication');
+
 
 const userRoute = require('./routes/user');
 const app = express();
@@ -13,10 +16,15 @@ mongoose.connect('mongodb://localhost:27017/weblog').then(e => console.log("Mong
 app.set('view engine', 'ejs');
 app.set("views", path.resolve("./views"));
 
-app.get('/', (req, res) => {
-    res.render('home');
-});
 app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie('token'));
+
+app.get('/', (req, res) => {
+    res.render('home', {
+        user: req.user,
+    });
+});
 
 app.use('/user', userRoute);
 
