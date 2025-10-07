@@ -6,6 +6,7 @@ const { checkForAuthenticationCookie } = require('./middlewares/authentication')
 
 
 const userRoute = require('./routes/user');
+const blogRoute = require('./routes/article');
 const app = express();
 
 const PORT = 8021;
@@ -27,5 +28,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userRoute);
+app.use('/blog', blogRoute);
 
 app.listen(PORT, () => console.log(`Server started at PORT:${PORT}`));
